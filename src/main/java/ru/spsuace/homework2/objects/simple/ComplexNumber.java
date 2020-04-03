@@ -5,23 +5,33 @@ package ru.spsuace.homework2.objects.simple;
  * Так же дополните класс методами, чтобы эти объекты можно было использовать в HashMap
  * Плюс реализуйте любой метод (операцию) над комплексными числами (на ваш выбор)
  */
+
 public class ComplexNumber {
-    private double mRe;
-    private double mIm;
+    private double Re;
+    private double Im;
+
     public ComplexNumber(double Re, double Im) {
-        mRe = Re;
-        mIm = Im;
+        this.Re = Re;
+        this.Im = Im;
     }
-    public double getRe(){
-       return mRe;
+
+    public double getRe() {
+        return Re;
     }
-    public double getIm(){
-        return mIm;
+
+    public double getIm() {
+        return Im;
     }
+
+    public String toString() {
+        return this.Re + this.Im + "*i";
+    }
+
     public double module() {
-        return Math.sqrt(mRe * mRe + mIm * mIm);
+        return Math.sqrt(Math.pow(this.Re, 2) + Math.pow(this.Im, 2));
     }
-    public String equality(ComplexNumber Number) {
-        return (mRe + Number.mRe) + "," + (mIm + Number.mIm);
+
+    public String equality() {
+        return (this.Re + Re) + "," + (this.Im + Im);
     }
 }
