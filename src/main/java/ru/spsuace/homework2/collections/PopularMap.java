@@ -106,18 +106,18 @@ public class PopularMap<K, V> implements Map<K, V> {
     public V put(K key, V value) {
         popularKeys(key);
         V oldValue = map.get(key);
-       if (oldValue != null){
-           popularValues(oldValue);
-       }
-       popularValues(value);
-        return map.put(key,value);
+        if (oldValue != null) {
+            popularValues(oldValue);
+        }
+        popularValues(value);
+        return map.put(key, value);
     }
 
     @Override
     public V remove(Object key) {
         popularKeys(key);
         V value = map.remove(key);
-        if (value != null){
+        if (value != null) {
             popularValues(value);
         }
         return value;
@@ -162,22 +162,24 @@ public class PopularMap<K, V> implements Map<K, V> {
      * 1 балла
      */
     public int getKeyPopularity(K key) {
-        if(popularKeyMap.get(key) == null) {
+        if (popularKeyMap.get(key) == null) {
             return 0;
         }
         return popularKeyMap.get(key);
     }
-public <T> T popularCount(Map<T, Integer>map){
+
+    public <T> T popularCount(Map<T, Integer> map) {
         T popular = null;
         int count = 0;
-        for(Map.Entry<T, Integer > entry:map.entrySet()){
-            if (entry.getValue()>=count) {
-                popular=entry.getKey();
+        for (Map.Entry<T, Integer> entry : map.entrySet()) {
+            if (entry.getValue() >= count) {
+                popular = entry.getKey();
                 count = entry.getValue();
             }
         }
         return popular;
-}
+    }
+
     /**
      * Возвращает самое популярное, на данный момент, значение. Надо учесть что значени может быть более одного
      * 1 балл
@@ -192,7 +194,7 @@ public <T> T popularCount(Map<T, Integer>map){
      * 1 балл
      */
     public int getValuePopularity(V value) {
-        if (popularValueMap.get(value) == null){
+        if (popularValueMap.get(value) == null) {
             return 0;
         }
         return popularValueMap.get(value);
