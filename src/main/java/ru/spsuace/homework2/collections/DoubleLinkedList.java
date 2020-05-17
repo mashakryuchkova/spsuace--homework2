@@ -67,7 +67,7 @@ public class DoubleLinkedList<T> implements Iterable<T> {
                 return index;
             }
             node = node.next;
-            index ++;
+            index++;
         }
         return -1;
     }
