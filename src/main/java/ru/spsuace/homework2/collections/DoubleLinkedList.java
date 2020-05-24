@@ -167,19 +167,34 @@ public class DoubleLinkedList<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            int n = 0;
-            int count = n * (n + 1);
+        return new DoubleLinkedListIterator();
+    }
 
-            @Override
-            public boolean hasNext() {
-                return count < size;
-            }
+    private class DoubleLinkedListIterator<T> implements Iterator<T> {
+        DNode<T> currentElement;
+        int currentIndex;
 
-            @Override
-            public T next() {
-                return get(count++);
-            }
-        };
+        public DoubleLinkedListIterator() {
+            currentElement = first;
+            currentIndex = -1;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentElement != null;
+        }
+
+        @Override
+        public T next() {
+            T currentData = currentElement.data;
+            currentElement = currentElement.next;
+            currentIndex++;
+            return currentData;
+        }
+
+        @Override
+        public void remove() {
+            DoubleLinkedList.this.remove(currentIndex);
+        }
     }
 }

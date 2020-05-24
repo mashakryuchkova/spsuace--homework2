@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -80,12 +82,13 @@ public class PopularMap<K, V> implements Map<K, V> {
 
     private void popularValues(Object Value) {
         Integer value = popularValueMap.get(Value);
-        if (value != null) {
-            value++;
+        if (value == null) {
+            value = 1;
             popularValueMap.put((V) Value, value);
-        } else {
-            popularValueMap.put((V) Value, 1);
+            return;
         }
+        value = value + 1;
+        popularValueMap.put((V) Value, value);
     }
 
     @Override
@@ -95,6 +98,7 @@ public class PopularMap<K, V> implements Map<K, V> {
     }
 
     @Override
+
     public V get(Object key) {
         popularKeys(key);
         V value = map.get(key);
@@ -105,22 +109,22 @@ public class PopularMap<K, V> implements Map<K, V> {
     @Override
     public V put(K key, V value) {
         popularKeys(key);
-        V oldValue = map.get(key);
-        if (oldValue != null) {
-            popularValues(oldValue);
-        }
         popularValues(value);
-        return map.put(key, value);
+        V result = map.put(key, value);
+        if (result != null) {
+            popularValues(result);
+        }
+        return result;
     }
 
     @Override
     public V remove(Object key) {
         popularKeys(key);
-        V value = map.remove(key);
-        if (value != null) {
-            popularValues(value);
+        V result = map.remove(key);
+        if (result != null) {
+            popularValues(result);
         }
-        return value;
+        return result;
     }
 
     @Override
@@ -153,7 +157,7 @@ public class PopularMap<K, V> implements Map<K, V> {
      * 1 балл
      */
     public K getPopularKey() {
-        return popularCount(popularKeyMap);
+        return popularKeyMap.entrySet().stream().sorted(Map.Entry.<K, Integer>comparingByValue().reversed()).findFirst().get().getKey();
     }
 
 
@@ -185,7 +189,7 @@ public class PopularMap<K, V> implements Map<K, V> {
      * 1 балл
      */
     public V getPopularValue() {
-        return popularCount(popularValueMap);
+        return popularValueMap.entrySet().stream().sorted(Map.Entry.<V, Integer>comparingByValue().reversed()).findFirst().get().getKey();
     }
 
     /**
@@ -205,6 +209,29 @@ public class PopularMap<K, V> implements Map<K, V> {
      * 2 балла (Сортировать можно через метод Collections.sort() с использованием Comparator (как с фильтрами)
      */
     public Iterator<V> popularIterator() {
-        return null;
+        Iterator<V> iterator = new Iterator<V>() {
+            List<Map.Entry<V, Integer>> iter = popularValueMap.entrySet().stream().sorted(Map.Entry.<V, Integer>comparingByValue()).collect(Collectors.toList());
+            int cursor = 0;
+            int size = iter.size();
+
+            @Override
+            public boolean hasNext() {
+                if (cursor < size) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public V next() {
+                if (cursor == size) {
+                    throw new NoSuchElementException();
+                }
+                V v = iter.get(cursor).getKey();
+                cursor = cursor + 1;
+                return v;
+            }
+        };
+        return iterator;
     }
 }
